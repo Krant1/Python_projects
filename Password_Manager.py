@@ -1,9 +1,10 @@
+import re
 class PasswordManager(object):
     def __init__(self):
         self.password_dict={}
     def view(self):
         try:
-            f=open('/Users/manojrai/Desktop/Python_Projects/Password.txt','r')
+            f=open('Password.txt','r')
             for lines in f.readlines():
                 print(lines)
         finally:
@@ -11,8 +12,15 @@ class PasswordManager(object):
 
     def add(self):
         while True:
+            self.pattern=re.compile(r'([A-Za-z0-9$%#@]{7,}[0-9])')
             self.name_of_site=input('Enter the name of the site: ')
-            self.password_of_site=input('Enter the password: ')
+            self.password_of_site=str(input('Enter the password: '))
+            if self.pattern.search(self.password_of_site)==None:
+                print('''The password doesn\'t satisfy either of the criterion:
+                1. Must have an uppercase character
+                2. Must have a number
+                3. Must have a special character 
+                4. Must be more than 8 characters long''')
             self.password_dict.update({self.name_of_site:self.password_of_site})
             self.continue_question=input('Press "Enter" to continue or "q" to quit ')
             if self.continue_question=='q':
@@ -20,7 +28,7 @@ class PasswordManager(object):
             else:
                 continue
         try:
-            f=open('/Users/manojrai/Desktop/Python_Projects/Password.txt','a')
+            f=open('Password.txt','a')
             f.write(str(self.password_dict))
         finally:
             f.close()
@@ -34,7 +42,7 @@ class PasswordManager(object):
                 self.password_dict.update({self.site_name:self.site_password})
         else: print('The entered site does not exits, please try again')
         try:
-            f=open('/Users/manojrai/Desktop/Python_Projects/Password.txt','w+')
+            f=open('Password.txt','w+')
             f.write(self.password_dict)
         finally:
             f.close()
